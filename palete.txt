@@ -1,0 +1,24 @@
+/* Primary Colors */
+--primary: #a8e6cf;      /* pastel mint green - main accent */
+--secondary: #ff6b9d;    /* pastel pink - secondary accent */
+--accent: #c7ceea;       /* pastel lavender - tertiary */
+
+/* Background */
+--bg-dark: #0a0e27;      /* deep space black */
+--bg-darker: #050810;    /* even darker for depth */
+--bg-card: #14182c;      /* card/window background */
+
+/* Text */
+--text-primary: #a8e6cf; /* main text (mint) */
+--text-secondary: #c7ceea; /* secondary text (lavender) */
+--text-muted: #6b7280;   /* muted/disabled text */
+
+/* Borders & UI */
+--border: #a8e6cf;       /* main borders (mint) */
+--border-subtle: #2d3748; /* subtle borders */
+
+/* Status Colors */
+--success: #7ecc71;      /* green */
+--warning: #f9ca24;      /* yellow */
+--error: #ff6b6b;        /* red */
+--info: #74b9ff;         /* blue */

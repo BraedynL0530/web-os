@@ -32,29 +32,40 @@ function Boot() {
     ]
 
     const [currentLine, setCurrentLine] = useState(0);
+    const [currentFrame, setCurrentFrame] = useState(0);
 
     useEffect(() => {
         if (currentLine < bootLines.length) {
             const timer = setTimeout(() => {
                 setCurrentLine(prev => prev + 1);
-            }, 400)
+            }, 800)
             return () => clearTimeout(timer);
         }
-    })
+    }, [currentLine, bootLines.length])
+
+    useEffect(() => {
+        if (currentFrame < loadFrames.length) {
+            const timer = setTimeout(() => {
+                setCurrentFrame(prev => prev + 1);
+            }, 353)
+            return () => clearTimeout(timer);
+        }
+    }, [currentFrame, loadFrames.length])
 
     useEffect(() => {
         const handleKeyDown = (event) => {
             window.location.href = '/'; //temp location
         };
         window.addEventListener('keydown', handleKeyDown);
-        
+
         return () => window.removeEventListener('keydown', handleKeyDown)
     })
     return (
         <>
             <div className="boot">
-                <div className="boot-header">
-                    <h1>sys boot</h1>
+                <h1 className="boot-title">NebulaOS</h1>
+                <div className="boot-container">
+                    <h1 className="boot-header">Sys Boot</h1>
                     <div className="boot-text">
                         {bootLines.map((line, index) => (
                             <p key={index} className={`line ${index < currentLine ? 'visible' : ''}`}>
@@ -66,12 +77,11 @@ function Boot() {
                 </div>
 
                 <div className="boot-loader">
-                    {loadFrames.map((frame, index) => (
-                        <p key={index} className={`frame ${index < currentLine ? 'visible' : ''}`}></p>
-                    ))}
+                     <p>{loadFrames[currentFrame] || loadFrames[loadFrames.length - 1]}</p>
                 </div>
             </div>
         </>
+
     )
 }
 
