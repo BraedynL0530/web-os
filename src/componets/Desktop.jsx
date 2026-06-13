@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Background from './Background';
 import TopBar from './TopBar';
 import WindowManager from './WindowManager';
-import AppLauncher from './AppLauncher';
+import AppBar from './AppBar';
 import '../css/Desktop.css';
 
 function Desktop() {
@@ -11,7 +11,7 @@ function Desktop() {
         {id:"filler" , name:"filler" , icon:"filler"}
     ]);
 
-    const lunchApp = (app) => {// dunno how this will work yet
+    const launch = (app) => {// dunno how this will work yet
         console.log(`Launching ${app.name}`);
     }
 
@@ -20,7 +20,7 @@ function Desktop() {
             <Background />
             <TopBar />
             <WindowManager />
-            <AppLauncher apps={apps} />
+            <AppBar />
         </div>
     );
 }

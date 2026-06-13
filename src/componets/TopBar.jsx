@@ -31,8 +31,13 @@ function TopBar() {
                 </div>
 
             <div className="drop-bar">
-
+                <div className="music-contrainer">
+                    <div className="music-info"></div>
+                    <div className="record-gif"></div>
+                    <div className="music-controls"></div>
+                    <div className="music-gif"></div>
                 </div>
+            </div>
         </>
     )
 }
