@@ -29,6 +29,8 @@ function WindowManager() {
     };
     const closeWindow = (id) => {
         setWindows(prev => prev.filter(w => w.id !== id));
+
+
     };
 
     const minimizeWindow = (id) => {

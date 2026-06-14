@@ -3,27 +3,26 @@ import Background from './background';
 import TopBar from './TopBar';
 import WindowManager from './WindowManger.jsx';
 import AppBar from './AppBar';
-//import '../css/Desktop.css';
 
 function Desktop() {
-
-    const apps = useState([
-        {id:"filler" , name:"filler" , componet:filler, icon:"filler"} // add later
+    const [apps] = useState([
+        { id: "filler", name: "filler", component: null, icon: "filler" }
     ]);
 
-    const launch = (app) => {// dunno how this will work yet
-        console.log(`Launching ${app.name}`);
-    }
+    const [wmRef, setWmRef] = useState(null);
 
     return (
-
         <div className="desktop">
             <Background />
             <TopBar />
-            <WindowManager />
-            <AppBar apps={apps}/>
-        </div>
 
+            <WindowManager ref={setWmRef} />
+
+            <AppBar
+                apps={apps}
+                onLaunchApp={(app) => wmRef?.openWindow(app)}
+            />
+        </div>
     );
 }
 
