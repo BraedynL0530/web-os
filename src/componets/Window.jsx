@@ -1,9 +1,11 @@
-
+import Draggable  from 'react-draggable'
+//import '../css/Window.css'
 function Window(window, onClose, onMinimize, onMaximize, onFocus) {
     const App = window.component;
 
 
     return (
+        <Draggable handle=".window-titlebar">
         <div className="window">
             <div className="window-controls">
                 <div className="window-title">{window.title}</div>
@@ -17,6 +19,7 @@ function Window(window, onClose, onMinimize, onMaximize, onFocus) {
                 <App />
             </div>
         </div>
+        </Draggable>
     )
 }
 

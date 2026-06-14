@@ -1,14 +1,14 @@
 import { useState } from 'react';
-import Background from './Background';
+import Background from './background';
 import TopBar from './TopBar';
-import WindowManager from './WindowManager';
+import WindowManager from './WindowManger.jsx';
 import AppBar from './AppBar';
-import '../css/Desktop.css';
+//import '../css/Desktop.css';
 
 function Desktop() {
 
     const apps = useState([
-        {id:"filler" , name:"filler" , icon:"filler"}
+        {id:"filler" , name:"filler" , componet:filler, icon:"filler"} // add later
     ]);
 
     const launch = (app) => {// dunno how this will work yet
@@ -16,12 +16,14 @@ function Desktop() {
     }
 
     return (
+
         <div className="desktop">
             <Background />
             <TopBar />
             <WindowManager />
-            <AppBar />
+            <AppBar apps={apps}/>
         </div>
+
     );
 }
 

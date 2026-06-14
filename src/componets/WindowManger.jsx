@@ -2,6 +2,8 @@
 import { useState } from "react";
 import Window from "./Window";
 
+
+
 function WindowManager() {
     const [windows, setWindows] = useState([]);
 
@@ -11,6 +13,7 @@ function WindowManager() {
             {
                 id: crypto.randomUUID(),
                 title: app.title,
+                icon: app.icon,
                 component: app.component,
                 x: 100,
                 y: 100,
@@ -18,7 +21,9 @@ function WindowManager() {
                 height: 400,
                 minimized: false,
                 maximized: false,
-                zIndex: prev.length + 1
+                zIndex: prev.length + 1,
+                snapped: false,
+                prevBounds: null
             }
         ]);
     };
@@ -58,6 +63,8 @@ function WindowManager() {
             )
         );
     };
+
+    //const tiling =
 
     return (
         <>

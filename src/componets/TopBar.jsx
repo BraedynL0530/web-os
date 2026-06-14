@@ -34,7 +34,15 @@ function TopBar() {
                 <div className="music-contrainer">
                     <div className="music-info"></div>
                     <div className="record-gif"></div>
-                    <div className="music-controls"></div>
+                    <div className="music-controls">
+                        <div className="prev-btn">⏮️</div>
+                        <div className="play-btn">▶️</div>
+                        <div className="next-btn">⏭️</div>
+                        <div className="add-song">
+                            <input className="song-input" placeholder="youtube url here" />
+                            <button className="add-btn">Add</button>
+                        </div>
+                    </div>
                     <div className="music-gif"></div>
                 </div>
             </div>

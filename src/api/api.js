@@ -1,7 +1,7 @@
 
 const weather = [
     function getWeather() {
-    return "99F" // mock data
+        return "99F" // mock data
     }
 ]
 
@@ -14,3 +14,4 @@ const music = [
     }
     }
 ]
+export default {weather, music}
