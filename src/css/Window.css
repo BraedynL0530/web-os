@@ -1,0 +1,31 @@
+.window {
+    position: absolute;
+    background: #14182c;
+    border: 1px solid #a8e6cf;
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+    overflow: hidden;
+    min-width: 300px;
+    min-height: 200px;
+}
+
+.window-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #0a0e27;
+    border-bottom: 1px solid #a8e6cf;
+    padding: 6px 10px;
+    cursor: grab;
+}
+
+.window-controls:active {
+    cursor: grabbing;
+}
+
+.window-content {
+    padding: 12px;
+    color: #a8e6cf;
+    font-family: monospace;
+}

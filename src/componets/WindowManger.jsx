@@ -1,10 +1,10 @@
 // this is going to be "launcher" now, opens and manages each window,
-import { useState } from "react";
+import { useState, forwardRef, useImperativeHandle } from "react";
 import Window from "./Window";
 
 
 
-function WindowManager() {
+const WindowManager = forwardRef((props, ref) => {
     const [windows, setWindows] = useState([]);
 
     const openWindow = (app) => {
@@ -68,6 +68,10 @@ function WindowManager() {
 
     //const tiling =
 
+    useImperativeHandle(ref, () => ({
+        openWindow
+    }));
+
     return (
         <>
             {windows.map(window => (
@@ -82,6 +86,6 @@ function WindowManager() {
             ))}
         </>
     );
-}
+});
 
 export default WindowManager;

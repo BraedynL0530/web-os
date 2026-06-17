@@ -1,4 +1,4 @@
-//import '../css/AppBar.css'
+import '../css/AppBar.css'
 
 function AppBar({apps,onLaunchApp}) {
 const launchApp = (app) => {
@@ -16,3 +16,4 @@ const launchApp = (app) => {
 }
 
 export default AppBar;
+

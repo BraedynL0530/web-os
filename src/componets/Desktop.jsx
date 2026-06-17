@@ -1,26 +1,27 @@
-import { useState } from 'react';
+import { useRef, useState } from "react";
 import Background from './background';
 import TopBar from './TopBar';
 import WindowManager from './WindowManger.jsx';
 import AppBar from './AppBar';
-
+import Whiteboard   from "./apps/whiteboard.jsx";
+import '../css/Desktop.css'
 function Desktop() {
     const [apps] = useState([
-        { id: "filler", name: "filler", component: null, icon: "filler" }
+        { id: crypto.randomUUID(), name: "Drawing", component: Whiteboard, icon: "filler" }
     ]);
 
-    const [wmRef, setWmRef] = useState(null);
+    const wmRef = useRef(null);
 
     return (
         <div className="desktop">
             <Background />
             <TopBar />
 
-            <WindowManager ref={setWmRef} />
+            <WindowManager ref={wmRef} />
 
             <AppBar
                 apps={apps}
-                onLaunchApp={(app) => wmRef?.openWindow(app)}
+                onLaunchApp={(app) => wmRef.current?.openWindow(app)}
             />
         </div>
     );

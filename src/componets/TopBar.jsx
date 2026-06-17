@@ -1,5 +1,7 @@
+//ToDO: topbar css needs finishing fix weather and dropdown, add setting, and more
 import { useState, useEffect } from 'react';
 import  weather from '../api/api.js'
+import '../css/TopBar.css'
 function TopBar() {
     const [time, setTime] = useState(new Date().toLocaleTimeString());
     const [weatherData, setWeatherData] = useState(null);
