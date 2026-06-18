@@ -23,9 +23,11 @@ function TopBar() {
         <>
             <div className="top-bar">
                 <div className="settings-btn">☰ Nebula</div>
-                <div className="clock">{time}</div>
-                <div className="weather">{weatherData}</div>
-                <div className="network">🌐</div>
+                <div className="top-right">
+                    <div className="clock">{time}</div>
+                    <div className="weather">{weatherData}</div>
+                    <div className="network">🌐</div>
+                </div>
             </div>
 
             <div className="settings-menu">
@@ -46,6 +48,12 @@ function TopBar() {
                         </div>
                     </div>
                     <div className="music-gif"></div>
+                </div>
+                <div className="notification">
+                    <div className="notif-title">NebulaOS</div>
+                    <div className="notif-body">star this project ⭐</div>
+                     <div className="notif-title">NebulaOS</div>
+                    <div className="notif-body">please TwT</div>
                 </div>
             </div>
         </>

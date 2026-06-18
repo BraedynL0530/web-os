@@ -1,4 +1,5 @@
 import '../css/AppBar.css'
+//ToDO: make searching work
 
 function AppBar({apps,onLaunchApp}) {
 const launchApp = (app) => {

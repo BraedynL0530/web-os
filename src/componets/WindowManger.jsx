@@ -44,14 +44,39 @@ const WindowManager = forwardRef((props, ref) => {
     };
 
     const maximizeWindow = (id) => {
-        setWindows(prev =>
-            prev.map(w =>
-                w.id === id
-                    ? { ...w, maximized: !w.maximized }
-                    : w
-            )
-        );
-    };
+    setWindows(prev =>
+        prev.map(w => {
+            if (w.id !== id) return w;
+
+            if (!w.maximized) {
+                return {
+                    ...w,
+                    prevBounds: {
+                        x: w.x,
+                        y: w.y,
+                        width: w.width,
+                        height: w.height
+                    },
+                    x: 0,
+                    y: 0,
+                    width: window.innerWidth,
+                    height: window.innerHeight,
+                    maximized: true
+                };
+            }
+
+            return {
+                ...w,
+                x: w.prevBounds?.x ?? w.x,
+                y: w.prevBounds?.y ?? w.y,
+                width: w.prevBounds?.width ?? w.width,
+                height: w.prevBounds?.height ?? w.height,
+                maximized: false,
+                prevBounds: null
+            };
+        })
+    );
+};
 
     const focusWindow = (id) => {
         const highest =
@@ -66,7 +91,15 @@ const WindowManager = forwardRef((props, ref) => {
         );
     };
 
-    //const tiling =
+    const moveWindow = (id, pos) => {
+    setWindows(prev =>
+        prev.map(w =>
+            w.id === id ? { ...w, ...pos } : w
+        )
+    );
+};
+
+    //const tiling aka snap=
 
     useImperativeHandle(ref, () => ({
         openWindow
@@ -75,14 +108,17 @@ const WindowManager = forwardRef((props, ref) => {
     return (
         <>
             {windows.map(window => (
-                <Window
-                    key={window.id}
-                    window={window}
-                    onClose={() => closeWindow(window.id)}
-                    onMinimize={() => minimizeWindow(window.id)}
-                    onMaximize={() => maximizeWindow(window.id)}
-                    onFocus={() => focusWindow(window.id)}
-                />
+                !window.minimized && (
+                    <Window
+                        key={window.id}
+                        window={window}
+                        onClose={() => closeWindow(window.id)}
+                        onMinimize={() => minimizeWindow(window.id)}
+                        onMaximize={() => maximizeWindow(window.id)}
+                        onFocus={() => focusWindow(window.id)}
+                        onMove={(pos) => moveWindow(window.id, pos)}
+                    />
+                )
             ))}
         </>
     );

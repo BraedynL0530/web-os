@@ -5,16 +5,17 @@ import WindowManager from './WindowManger.jsx';
 import AppBar from './AppBar';
 import Whiteboard   from "./apps/whiteboard.jsx";
 import '../css/Desktop.css'
+
 function Desktop() {
     const [apps] = useState([
-        { id: crypto.randomUUID(), name: "Drawing", component: Whiteboard, icon: "filler" }
+        { id: crypto.randomUUID(), name: "Drawing",title:"Drawing", component: Whiteboard, icon: "filler" }
     ]);
 
     const wmRef = useRef(null);
 
     return (
         <div className="desktop">
-            <Background />
+
             <TopBar />
 
             <WindowManager ref={wmRef} />

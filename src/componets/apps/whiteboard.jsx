@@ -133,16 +133,15 @@ const Whiteboard = () => {
 
   return (
     <>
-      <div style={{ height: 100, backgroundColor: '#eee', padding: '10px' }}>
+      <div style={{ height: 100, backgroundColor: '#ffffff', padding: '10px' }}>
         <button onClick={addRect}>Add Rectangle</button>
         <button onClick={addCircle}>Add Circle</button>
         <button onClick={addEllipse}>Add Ellipse</button>
         <button onClick={() => setActiveTool('draw')}>✏️ Draw</button>
         <button onClick={() => setActiveTool('erase')}>🧽 Erase</button>
-        <button onClick={() => setActiveTool('text')}>T Text</button>
         <h1>Whiteboard Header</h1>
       </div>
-      <Stage
+      <Stage style={{backgroundColor:'#ffffff'}}
         width={dimensions.width}
         height={stageHeight}
         ref={stageRef}
@@ -175,7 +174,7 @@ const Whiteboard = () => {
             />
           ))}
 
-          <Text text="Try to drag shapes" fontSize={15} />
+          <Text text="Try to drag shapes, cllick on shapes you add(not drawn) to edit roation and size!" fontSize={20} />
           {elements.map(el => {
             switch (el.type) {
               case 'rect':

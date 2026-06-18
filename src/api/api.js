@@ -1,4 +1,4 @@
-
+//ToDo: plug in weather api
 const BACKEND_URL = 'http://localhost:8000';
 
 const weather = [
