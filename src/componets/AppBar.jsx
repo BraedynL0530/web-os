@@ -44,12 +44,20 @@ function AppBar({ apps, onLaunchApp }) {
                                     className="search-result"
                                     onClick={() => launchApp(app)}
                                 >
-                                    {app.icon} {app.name}
+                                    {app.icon}
                                 </div>
                             ))
                         ) : (
                             <div className="search-result">
-                                No apps found
+                                {apps.map(app => ( //im too lazy to do another way, so it shows them all if no match
+                                    <button
+                                        key={`${app.id}-${app.name}`}
+                                        className="app-icon"
+                                        onClick={() => launchApp(app)}
+                                    >
+                                        {app.icon}
+                                    </button>
+                                ))}
                             </div>
                         )}
                     </div>

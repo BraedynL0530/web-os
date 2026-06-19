@@ -5,6 +5,10 @@ body,
     width: 100%;
     height: 100%;
 }
+.top-wrapper {
+    position: relative;
+}
+
 .top-bar {
     position: absolute;
     top: 0;
@@ -86,8 +90,13 @@ body,
     font-size: 12px;
     opacity: 0.9;
 }
-.top-bar:hover + .settings-menu + .drop-bar {
+.top-wrapper:hover .drop-bar {
     opacity: 1;
     visibility: visible;
     transform: translate(-50%, 0);
+    pointer-events: auto;
+}
+
+audio {
+    display: none;
 }

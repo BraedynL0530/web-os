@@ -1,6 +1,6 @@
 # old yt dowloader repurposed into local storage music
-import os
-import re
+import uvicorn
+from fastapi import Query
 import fastapi
 import requests
 from fastapi.responses import StreamingResponse
@@ -32,6 +32,8 @@ def stream_youtube_audio(url: str):
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         info = ydl.extract_info(url, download=False)
         stream_url = info["url"]
+        title = info.get("title", "Unknown Title") #ToDo: pluginlater
+
 
     r = requests.get(stream_url, stream=True)
 
@@ -40,16 +42,18 @@ def stream_youtube_audio(url: str):
             yield chunk
 
 
-@app.post("/stream-song")
-def stream_song(request: VideoRequest):
-    if not request.url:
+@app.get("/stream-song")
+def stream_song(url: str = Query(...)):
+    if not url:
         return {"error": "No URL provided"}
 
     try:
         return StreamingResponse(
-            stream_youtube_audio(request.url),
+            stream_youtube_audio(url),
             media_type="audio/mpeg"
         )
     except Exception as e:
         return {"error": str(e)}
 
+if __name__ == "__main__":
+    uvicorn.run("media:app", host="127.0.0.1", port=8000, reload=True)

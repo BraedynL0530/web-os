@@ -1,8 +1,24 @@
-const BACKEND_URL = 'http://localhost:8000';
+const BACKEND_URL = 'http://localhost:8000'; // note to me change this on prod
 
 export const weather = {
-    getWeather() {
-        return "99F"; // ToDo: plug into real api
+    async getWeather() {
+        try {
+            const ipRes = await fetch('https://ipapi.co'); //doesnt work if they have privacy features like fixfox for me
+            const ipData = await ipRes.json();
+            const { latitude, longitude, city } = ipData;
+
+            const weatherUrl = `https://open-meteo.com{latitude}&longitude=${longitude}&current=temperature_2m&temperature_unit=fahrenheit`;
+            const weatherRes = await fetch(weatherUrl);
+            const weatherData = await weatherRes.json();
+
+            const tempF = weatherData.current.temperature_2m;
+
+            // Returns something like "72°F (New York)"
+            return `${Math.round(tempF)}°F (${city})`;
+        } catch (error) {
+            console.error("Failed to fetch weather data:", error);
+            return "N/A check privacy settings";
+        }
     }
 };
 
@@ -31,17 +47,5 @@ export const music = {
 
         return this.getMusic();
     },
-
-    deleteMusic(indexToRemove) {
-        const savedTracks = localStorage.getItem('url_playlist');
-        if (!savedTracks) return [];
-
-        let urls = JSON.parse(savedTracks);
-        urls = urls.filter((_, index) => index !== indexToRemove);
-
-        localStorage.setItem('url_playlist', JSON.stringify(urls));
-
-        return this.getMusic();
-    }
 };
 
