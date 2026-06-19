@@ -1,17 +1,20 @@
-//ToDO: topbar css needs finishing fix weather and dropdown, add setting, and more
+//ToDO: finish settings and music
 import { useState, useEffect } from 'react';
-import  weather from '../api/api.js'
+import {weather} from '../api/api.js'
 import '../css/TopBar.css'
 function TopBar() {
     const [time, setTime] = useState(new Date().toLocaleTimeString());
     const [weatherData, setWeatherData] = useState(null);
 
-    useEffect(() => {{
+    useEffect(() => {
     const interval = setInterval(() => {
-            setWeatherData(weather.getWeather());
-        }, 600000);
-        return () => clearInterval(interval);}
-    })
+        setWeatherData(weather.getWeather());
+    }, 600000);
+
+    setWeatherData(weather.getWeather());
+
+    return () => clearInterval(interval);
+}, []);
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -23,14 +26,16 @@ function TopBar() {
         <>
             <div className="top-bar">
                 <div className="settings-btn">☰ Nebula</div>
+                <div className="center">NebulaOS</div>
+
                 <div className="top-right">
                     <div className="clock">{time}</div>
-                    <div className="weather">{weatherData}</div>
+                    <div className="weather">Temp:{weatherData}</div>
                     <div className="network">🌐</div>
                 </div>
             </div>
 
-            <div className="settings-menu">
+            <div className="settings-dropdown">
 
                 </div>
 

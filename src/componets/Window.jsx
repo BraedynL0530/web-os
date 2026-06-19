@@ -13,12 +13,14 @@ function Window({window, onClose, onMinimize, onMaximize, onFocus,onMove}) {
         top: window.y,
         width: window.width,
         height: window.height,
+        zIndex: window.zIndex, //added focus functionality
         position: "absolute"
     }}
 >
     <div
         className="window-controls"
         onMouseDown={(e) => {
+            onFocus?.(window.id);
             const startX = e.clientX;
             const startY = e.clientY;
 

@@ -19,7 +19,59 @@
     font-size: 18px;
     cursor: pointer;
 }
-
+.app-bar-spacer {
+    width: 1px;
+    height: 24px;
+    align-self: center;
+    background: #262e5a;
+    margin: 0;
+}
 .app-icon:hover {
     color: #ff6b9d;
+}
+.search-results {
+    background: transparent;
+    border: none;
+    color: #a8e6cf;
+    font-size: 18px;
+    cursor: pointer;
+}
+.search-results:hover {
+    color: #ff6b9d;
+}
+.search-container {
+    position: relative;
+}
+
+.app-search {
+    width: 220px;
+
+    padding: 8px 16px;
+
+    background: #14182c;
+    color: #c7ceea;
+
+    border: 1px solid #a8e6cf;
+    border-radius: 999px;
+
+    outline: none;
+
+    font-family: monospace;
+    font-size: 13px;
+
+    transition: all 0.2s ease;
+}
+
+.app-search::placeholder {
+    color: #6b7280;
+}
+
+.app-search:focus {
+    border-color: #ff6b9d;
+
+    box-shadow:
+        0 0 8px rgba(255, 107, 157, 0.4),
+        0 0 16px rgba(168, 230, 207, 0.15);
+
+    background: #1d2340;
 }

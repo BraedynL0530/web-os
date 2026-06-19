@@ -8,7 +8,11 @@ import '../css/Desktop.css'
 
 function Desktop() {
     const [apps] = useState([
-        { id: crypto.randomUUID(), name: "Drawing",title:"Drawing", component: Whiteboard, icon: "filler" }
+        { id: crypto.randomUUID(), name: "Drawing",title:"Drawing", component: Whiteboard, icon: "Drawing"},
+        { id: crypto.randomUUID(), name: "test1",title:"test1", component: Whiteboard, icon: "test1" },
+        { id: crypto.randomUUID(), name: "test2",title:"test2", component: Whiteboard, icon: "test2" },
+        { id: crypto.randomUUID(), name: "test3",title:"test3", component: Whiteboard, icon: "test3" },
+        { id: crypto.randomUUID(), name: "test4",title:"test4", component: Whiteboard, icon: "test4" }
     ]);
 
     const wmRef = useRef(null);

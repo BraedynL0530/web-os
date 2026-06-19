@@ -2,7 +2,7 @@
 import { useState, forwardRef, useImperativeHandle } from "react";
 import Window from "./Window";
 
-
+//ToDo: Tiling
 
 const WindowManager = forwardRef((props, ref) => {
     const [windows, setWindows] = useState([]);
@@ -79,8 +79,7 @@ const WindowManager = forwardRef((props, ref) => {
 };
 
     const focusWindow = (id) => {
-        const highest =
-            Math.max(...windows.map(w => w.zIndex), 0) + 1;
+        const highest = Math.max(...windows.map(w => w.zIndex), 0) + 1;
 
         setWindows(prev =>
             prev.map(w =>

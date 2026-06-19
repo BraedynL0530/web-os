@@ -2,6 +2,7 @@
 import os
 import re
 import fastapi
+import requests
 from fastapi.responses import StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -26,21 +27,17 @@ def stream_youtube_audio(url: str):
     ydl_opts = {
         'format': 'bestaudio/best',
         'quiet': True,
-         'outtmpl': '-',
-        'outtmpl': '-',
-        'logtostderr': True,
     }
 
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         info = ydl.extract_info(url, download=False)
-        stream_url = info.get('url')
+        stream_url = info["url"]
 
-        with ydl.urlopen(stream_url) as stream:
-            while True:
-                chunk = stream.read(1024 * 64)
-                if not chunk:
-                    break
-                yield chunk
+    r = requests.get(stream_url, stream=True)
+
+    for chunk in r.iter_content(chunk_size=64 * 1024):
+        if chunk:
+            yield chunk
 
 
 @app.post("/stream-song")

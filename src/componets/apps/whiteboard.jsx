@@ -139,7 +139,7 @@ const Whiteboard = () => {
         <button onClick={addEllipse}>Add Ellipse</button>
         <button onClick={() => setActiveTool('draw')}>✏️ Draw</button>
         <button onClick={() => setActiveTool('erase')}>🧽 Erase</button>
-        <h1>Whiteboard Header</h1>
+        <h2>Draw</h2>
       </div>
       <Stage style={{backgroundColor:'#ffffff'}}
         width={dimensions.width}

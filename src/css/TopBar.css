@@ -32,6 +32,13 @@ body,
     color: #c7ceea;
     padding: 0 4px;
 }
+.center{
+    display: flex;
+    align-content: center;
+    text-align: center;
+    color: #ff6b9d;
+    font-size: 20px;
+}
 .top-right {
     display: flex;
     align-items: center;
