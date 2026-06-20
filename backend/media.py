@@ -27,12 +27,14 @@ def stream_youtube_audio(url: str):
     ydl_opts = {
         'format': 'bestaudio/best',
         'quiet': True,
+        "no_warnings": True,
+        "noplaylist": True,
+        "skip_download": True,
     }
 
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         info = ydl.extract_info(url, download=False)
         stream_url = info["url"]
-        title = info.get("title", "Unknown Title") #ToDo: pluginlater
 
 
     r = requests.get(stream_url, stream=True)
@@ -41,13 +43,32 @@ def stream_youtube_audio(url: str):
         if chunk:
             yield chunk
 
+def get_song_info(url: str):
+    ydl_opts = {
+        "format": "bestaudio/best",
+        "quiet": True,
+    }
+
+    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+        info = ydl.extract_info(url, download=False)
+        return {
+            "title": info.get("title", "Unknown Title"),
+            "duration": info.get("duration"),
+        }
 
 @app.get("/stream-song")
-def stream_song(url: str = Query(...)):
+def stream_song(url: str = Query(...),meta: bool = Query(False)):
     if not url:
         return {"error": "No URL provided"}
 
     try:
+        info = get_song_info(url)
+
+        if meta:
+            return {
+                "title": info["title"],
+                "duration": info["duration"],
+            }
         return StreamingResponse(
             stream_youtube_audio(url),
             media_type="audio/mpeg"

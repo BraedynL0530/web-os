@@ -1,62 +1,98 @@
-import Draggable  from 'react-draggable'
-import '../css/Window.css'
-function Window({window, onClose, onMinimize, onMaximize, onFocus,onMove}) {
-    const App = window.component;
+import "../css/Window.css";
 
+function Window({
+  window,
+  viewport,
+  onClose,
+  onMinimize,
+  onMaximize,
+  onFocus,
+  onMove,
+  onResize
+}) {
+  const App = window.component;
 
-    //stupid auto complete on draggable
-    return (
-        <div
-    className="window"
-    style={{
+  const startResize = (e) => {
+    e.stopPropagation();
+
+    const startX = e.clientX;
+    const startY = e.clientY;
+    const startWidth = window.width;
+    const startHeight = window.height;
+
+    const onMouseMove = (ev) => {
+      onResize?.({
+        width: Math.max(320, startWidth + (ev.clientX - startX)),
+        height: Math.max(240, startHeight + (ev.clientY - startY))
+      });
+    };
+
+    const onMouseUp = () => {
+      document.removeEventListener("mousemove", onMouseMove);
+      document.removeEventListener("mouseup", onMouseUp);
+    };
+
+    document.addEventListener("mousemove", onMouseMove);
+    document.addEventListener("mouseup", onMouseUp);
+  };
+
+  return (
+    <div
+      className="window"
+      style={{
         left: window.x,
         top: window.y,
         width: window.width,
         height: window.height,
-        zIndex: window.zIndex, //added focus functionality
+        zIndex: window.zIndex,
         position: "absolute"
-    }}
->
-    <div
+      }}
+    >
+      <div
         className="window-controls"
         onMouseDown={(e) => {
-            onFocus?.(window.id);
-            const startX = e.clientX;
-            const startY = e.clientY;
+          onFocus?.(window.id);
 
-            const baseX = window.x;
-            const baseY = window.y;
+          const startX = e.clientX;
+          const startY = e.clientY;
+          const baseX = window.x;
+          const baseY = window.y;
 
-            const onMoveMouse = (ev) => {
-                onMove?.({
-                    x: baseX + (ev.clientX - startX),
-                    y: baseY + (ev.clientY - startY)
-                });
-            };
+          const onMoveMouse = (ev) => {
+            onMove?.({
+              x: baseX + (ev.clientX - startX),
+              y: baseY + (ev.clientY - startY)
+            });
+          };
 
-            const onUp = () => {
-                document.removeEventListener("mousemove", onMoveMouse);
-                document.removeEventListener("mouseup", onUp);
-            };
+          const onUp = () => {
+            document.removeEventListener("mousemove", onMoveMouse);
+            document.removeEventListener("mouseup", onUp);
+          };
 
-            document.addEventListener("mousemove", onMoveMouse);
-            document.addEventListener("mouseup", onUp);
+          document.addEventListener("mousemove", onMoveMouse);
+          document.addEventListener("mouseup", onUp);
         }}
-    >
+      >
         <div className="window-title">{window.title}</div>
 
         <div className="window-buttons">
-            <button onClick={onMinimize}>-</button>
-            <button onClick={onMaximize}>[]</button>
-            <button onClick={onClose}>X</button>
+          <button onClick={onMinimize}>-</button>
+          <button onClick={onMaximize}>[]</button>
+          <button onClick={onClose}>X</button>
         </div>
-    </div>
+      </div>
 
-    <div className="window-content">
-        <App width={window.width} height={window.height}  />
+      <div className="window-content">
+        <App
+          width={viewport?.width ?? window.width}
+          height={viewport?.height ?? window.height}
+        />
+      </div>
+
+      <div className="resize-handle" onMouseDown={startResize} />
     </div>
-</div>
-    )
+  );
 }
 
-export default Window
+export default Window;

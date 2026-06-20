@@ -1,32 +1,28 @@
 .window {
-    position: absolute;
-    display: flex;
-    background: #14182c;
-    border: 1px solid #a8e6cf;
-    border-radius: 10px;
-    backdrop-filter: blur(10px);
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
-    width: min(800px, 90vw);
-    height: min(600px, 80vh);
-    overflow: hidden;
-    flex-direction: column;
-
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  background: #14182c;
+  border: 1px solid #a8e6cf;
+  border-radius: 10px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+  overflow: hidden;
 }
 
-
 .window-controls {
-    display: flex;
-    flex-shrink: 0;
-    justify-content: space-between;
-    align-items: center;
-    background: #0a0e27;
-    border-bottom: 1px solid #a8e6cf;
-    padding: 6px 10px;
-    cursor: grab;
+  display: flex;
+  flex-shrink: 0;
+  justify-content: space-between;
+  align-items: center;
+  background: #0a0e27;
+  border-bottom: 1px solid #a8e6cf;
+  padding: 6px 10px;
+  cursor: grab;
 }
 
 .window-controls:active {
-    cursor: grabbing;
+  cursor: grabbing;
 }
 
 .window-content {
@@ -40,7 +36,16 @@
   overflow: hidden;
 }
 
+.window-title {
+  color: #ff6b9d;
+}
 
-.window-title{
-    color: #ff6b9d;
+.resize-handle {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 16px;
+  height: 16px;
+  cursor: nwse-resize;
+  background: linear-gradient(135deg, transparent 0 50%, rgba(255,255,255,0.16) 50% 100%);
 }

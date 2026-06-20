@@ -11,14 +11,26 @@ function TopBar({backgrounds,setBackground}) {
     const [currentIndex, setCurrentIndex] = useState(0);
 
     useEffect(() => {
-    const interval = setInterval(() => {
-        setWeatherData(weather.getWeather());
-    }, 600000);
+      let cancelled = false;
 
-    setWeatherData(weather.getWeather());
+      const loadWeather = async () => {
+        const result = await weather.getWeather();
+        if (!cancelled) {
+          setWeatherData(result);
+        }
+      };
 
-    return () => clearInterval(interval);
-}, []);
+      loadWeather();
+
+      const interval = setInterval(() => {
+        loadWeather();
+      }, 600000);
+
+      return () => {
+        cancelled = true;
+        clearInterval(interval);
+      };
+    }, []);
         useEffect(() => {
         setPlaylist(music.getMusic());
     }, []);
@@ -30,13 +42,23 @@ function TopBar({backgrounds,setBackground}) {
         return () => clearInterval(interval);
     }, []);
 
-    const handleAddSong = () => {
-        const input = document.querySelector('.song-input');
-        const updated = music.addMusic(input.value);
+    useEffect(() => {
+      const loadMusic = async () => {
+        const tracks = await music.getMusic();
+        setPlaylist(tracks);
+      };
 
-        setPlaylist(updated);
-        input.value = '';
-    };
+      loadMusic();
+    }, []);
+
+    const handleAddSong = async () => {
+      const input = document.querySelector(".song-input");
+      if (!input) return;
+
+      const updated = await music.addMusic(input.value);
+      setPlaylist(updated);
+      input.value = "";
+};
     const playSong = (index) => {
         const track = playlist[index];
         if (!track) return;
@@ -62,7 +84,10 @@ function TopBar({backgrounds,setBackground}) {
                 <audio ref={audioRef} />
             <div className="top-bar">
                 <div className="settings-btn">☰ Nebula</div>
-                <div className="center">NebulaOS</div>
+                <div className="center">
+                    <div className="center-title">NebulaOS</div>
+                    <div className="center-subtext">▾ Quick panel</div>
+            </div>
 
                 <div className="top-right">
                     <div className="clock">{time}</div>
@@ -89,9 +114,10 @@ function TopBar({backgrounds,setBackground}) {
                                 backgroundImage: `url(${bg.image})`,
                                 backgroundSize: "cover"
                             }}
-                        />
+                        >{bg.name}</button>
                     ))}
                 </div>
+                <div className="random-gif"></div>
             </div>
 
             <div className="drop-bar">
@@ -132,14 +158,12 @@ function TopBar({backgrounds,setBackground}) {
                         </div>
                     </div>
                 </div>
-                    <div className="music-gif"></div>
                 <div className="notification">
+                    <div className="notif-header">notifications</div>
                     <div className="notif-title">NebulaOS</div>
                     <div className="notif-body">Snake is buggy</div>
                     <div className="notif-title">NebulaOS</div>
-                    <div className="notif-body">star this project ⭐</div>
-                     <div className="notif-title">NebulaOS</div>
-                    <div className="notif-body">please TwT</div>
+                    <div className="notif-body">star this project ⭐ please TwT</div>
                 </div>
             </div>
             </div>

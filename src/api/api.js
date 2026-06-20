@@ -1,51 +1,82 @@
 const BACKEND_URL = 'http://localhost:8000'; // note to me change this on prod
 
-export const weather = {
-    async getWeather() {
-        try {
-            const ipRes = await fetch('https://ipapi.co'); //doesnt work if they have privacy features like fixfox for me
-            const ipData = await ipRes.json();
-            const { latitude, longitude, city } = ipData;
-
-            const weatherUrl = `https://open-meteo.com{latitude}&longitude=${longitude}&current=temperature_2m&temperature_unit=fahrenheit`;
-            const weatherRes = await fetch(weatherUrl);
-            const weatherData = await weatherRes.json();
-
-            const tempF = weatherData.current.temperature_2m;
-
-            // Returns something like "72°F (New York)"
-            return `${Math.round(tempF)}°F (${city})`;
-        } catch (error) {
-            console.error("Failed to fetch weather data:", error);
-            return "N/A check privacy settings";
-        }
-    }
+const formatDuration = (seconds) => {
+  if (!seconds || Number.isNaN(seconds)) return "—";
+  const mins = Math.floor(seconds / 60);
+  const secs = Math.floor(seconds % 60);
+  return `${mins}:${secs.toString().padStart(2, "0")}`;
 };
 
+export const weather = {
+  async getWeather() {
+    try {
+      const ipRes = await fetch("https://ipapi.co/json/");
+      if (!ipRes.ok) {
+        throw new Error(`IP lookup failed: ${ipRes.status}`);
+      }
+
+      const ipData = await ipRes.json();
+      const { latitude, longitude, city } = ipData;
+
+      const weatherUrl =
+        `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m&temperature_unit=fahrenheit`;
+
+      const weatherRes = await fetch(weatherUrl);
+      if (!weatherRes.ok) {
+        throw new Error(`Weather lookup failed: ${weatherRes.status}`);
+      }
+
+      const weatherData = await weatherRes.json();
+      const tempF = weatherData.current?.temperature_2m;
+
+      if (typeof tempF !== "number") {
+        throw new Error("No temperature returned");
+      }
+
+      return `${Math.round(tempF)}°F`;
+    } catch (error) {
+      console.error("Weather fetch failed:", error);
+      return `N/A (${error.message})`;
+    }
+  }
+};
 export const music = {
-    getMusic() {
-        const savedTracks = localStorage.getItem('url_playlist');
+    async getMusic() {
+        const savedTracks = localStorage.getItem("url_playlist");
         const urls = savedTracks ? JSON.parse(savedTracks) : [];
 
-        return urls.map((url, index) => ({
-            id: index,
+        const tracks = [];
+
+        for (const url of urls) {
+          const res = await fetch(
+            `${BACKEND_URL}/stream-song?url=${encodeURIComponent(url)}&meta=1`
+          );
+          const data = await res.json();
+
+          tracks.push({
+            id: tracks.length,
             artist: "YouTube Video",
-            song: `Song #${index + 1}`,
+            song: data.title || "Unknown Title",
+            title: data.title || "Unknown Title",
+            duration: formatDuration(data.duration),
             rawUrl: url,
             file: `${BACKEND_URL}/stream-song?url=${encodeURIComponent(url)}`
-        }));
-    },
+          });
+        }
 
-    addMusic(newUrl) {
+        return tracks;
+  },
+
+    async addMusic(newUrl) {
         if (!newUrl) return this.getMusic();
 
-        const savedTracks = localStorage.getItem('url_playlist');
+        const savedTracks = localStorage.getItem("url_playlist");
         const urls = savedTracks ? JSON.parse(savedTracks) : [];
 
         urls.push(newUrl);
-        localStorage.setItem('url_playlist', JSON.stringify(urls));
+        localStorage.setItem("url_playlist", JSON.stringify(urls));
 
         return this.getMusic();
-    },
+      },
 };
 
