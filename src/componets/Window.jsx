@@ -53,7 +53,7 @@ function Window({window, onClose, onMinimize, onMaximize, onFocus,onMove}) {
     </div>
 
     <div className="window-content">
-        <App />
+        <App width={window.width} height={window.height}  />
     </div>
 </div>
     )

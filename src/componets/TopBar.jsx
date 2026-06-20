@@ -73,7 +73,9 @@ function TopBar() {
             <div className="settings-dropdown">
                 <div className="os-info">NebulaOs v0.1</div>
                 <div className="about me"></div>
-                <div className="backgrounds"></div>
+                <div className="backgrounds">
+                    bg 1,2,3 add buttons here next
+                </div>
                 </div>
 
             <div className="drop-bar">
@@ -116,6 +118,8 @@ function TopBar() {
                 </div>
                     <div className="music-gif"></div>
                 <div className="notification">
+                    <div className="notif-title">NebulaOS</div>
+                    <div className="notif-body">Snake is buggy</div>
                     <div className="notif-title">NebulaOS</div>
                     <div className="notif-body">star this project ⭐</div>
                      <div className="notif-title">NebulaOS</div>

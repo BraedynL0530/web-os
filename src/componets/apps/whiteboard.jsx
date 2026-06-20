@@ -174,7 +174,7 @@ const Whiteboard = () => {
             />
           ))}
 
-          <Text text="Try to drag shapes, cllick on shapes you add(not drawn) to edit roation and size!" fontSize={20} />
+          <Text text="Try to drag shapes, click on added shapes to edit" fontSize={20} />
           {elements.map(el => {
             switch (el.type) {
               case 'rect':
