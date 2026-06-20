@@ -7,7 +7,7 @@ function Boot() {
         '[NebulaOS OS v0.1] BOOTING...',
         'Loading kernel...',
         'Loading initrd...',
-        'Mounting Files...',
+        'Pro Tip: Hover over top bar',
         'Starting System...',
         'Welcome Back to NebulaOS :3'
     ]

@@ -2,7 +2,7 @@
 import { useState, forwardRef, useImperativeHandle } from "react";
 import Window from "./Window";
 
-//ToDo: Tiling
+//tiling will be post ship
 
 const WindowManager = forwardRef((props, ref) => {
     const [windows, setWindows] = useState([]);

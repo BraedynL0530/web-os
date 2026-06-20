@@ -2,7 +2,8 @@
 import { useState, useEffect, useRef } from 'react';
 import {weather, music} from '../api/api.js'
 import '../css/TopBar.css'
-function TopBar() {
+
+function TopBar({backgrounds}) {
     const [time, setTime] = useState(new Date().toLocaleTimeString());
     const [weatherData, setWeatherData] = useState(null);
     const [playlist, setPlaylist] = useState([]);
@@ -72,11 +73,18 @@ function TopBar() {
 
             <div className="settings-dropdown">
                 <div className="os-info">NebulaOs v0.1</div>
-                <div className="about me"></div>
+                <div className="about-me-menu">
+                    <div className="about-me-title">About Me!</div>
+                    <div className="about-me-body">
+                        hi im me and this is my about me section
+                    </div>
+                </div>
                 <div className="backgrounds">
-                    bg 1,2,3 add buttons here next
+                    {backgrounds.map((bg, index) => (
+                        <button key={index} className="background-item"></button>
+                    ))}
                 </div>
-                </div>
+            </div>
 
             <div className="drop-bar">
                 <div className="music-contrainer">

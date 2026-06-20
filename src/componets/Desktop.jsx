@@ -1,5 +1,4 @@
 import { useRef, useState } from "react";
-import Background from './background';
 import TopBar from './TopBar';
 import WindowManager from './WindowManger.jsx';
 import AppBar from './AppBar';
@@ -16,12 +15,17 @@ function Desktop() {
         { id: crypto.randomUUID(), name: "Terminal",title:"Terminal", component: Whiteboard, icon: "Terminal" }
     ]);
 
+    const [backgrounds] = useState([
+        {id:1, image:"temp.jpg"},
+        {id:2, image:"temp.jpg"},
+        {id:3, image:"temp.jpg"}
+    ]);
     const wmRef = useRef(null);
 
     return (
         <div className="desktop">
 
-            <TopBar />
+            <TopBar backgrounds={backgrounds}/>
 
             <WindowManager ref={wmRef} />
 
