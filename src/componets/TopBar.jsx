@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import {weather, music} from '../api/api.js'
 import '../css/TopBar.css'
 
-function TopBar({backgrounds}) {
+function TopBar({backgrounds,setBackground}) {
     const [time, setTime] = useState(new Date().toLocaleTimeString());
     const [weatherData, setWeatherData] = useState(null);
     const [playlist, setPlaylist] = useState([]);
@@ -80,8 +80,16 @@ function TopBar({backgrounds}) {
                     </div>
                 </div>
                 <div className="backgrounds">
-                    {backgrounds.map((bg, index) => (
-                        <button key={index} className="background-item"></button>
+                    {backgrounds.map((bg) => (
+                        <button
+                            key={bg.id}
+                            className="background-item"
+                            onClick={() => setBackground(bg)}
+                            style={{
+                                backgroundImage: `url(${bg.image})`,
+                                backgroundSize: "cover"
+                            }}
+                        />
                     ))}
                 </div>
             </div>

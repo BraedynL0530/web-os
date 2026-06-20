@@ -20,12 +20,20 @@ function Desktop() {
         {id:2, image:"temp.jpg"},
         {id:3, image:"temp.jpg"}
     ]);
+    const [currentBg, setCurrentBg] = useState(backgrounds[0]);
+
     const wmRef = useRef(null);
 
     return (
-        <div className="desktop">
+        <div
+        className="desktop"
+        style={{
+            backgroundImage: `url(${currentBg.image})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center"
+        }}>
 
-            <TopBar backgrounds={backgrounds}/>
+            <TopBar backgrounds={backgrounds} setBackground={setCurrentBg}/>
 
             <WindowManager ref={wmRef} />
 
