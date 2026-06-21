@@ -1,0 +1,4 @@
+backend/
+media.py
+requirements.txt
+Dockerfile
