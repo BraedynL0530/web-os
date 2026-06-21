@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef } from 'react';
 import {weather, music} from '../api/api.js'
 import '../css/TopBar.css'
+import recordGif from "../assets/record-spinning.gif"
 
 function TopBar({backgrounds,setBackground}) {
     const [time, setTime] = useState(new Date().toLocaleTimeString());
@@ -132,7 +133,7 @@ function TopBar({backgrounds,setBackground}) {
                             </div>
                         ))}
                     </div>
-                    <div className="record-gif"></div>
+                    <div className="record-gif"><img src={recordGif}/></div>
                     <p className="diclamer">this may take a while everytime you add a new song or go forward/back or refresh</p>
                     <div className="music-controls">
                         <button className="prev-btn" onClick={prevSong}>⏮️</button>

@@ -41,7 +41,7 @@ export const weather = {
   }
 };
 export const music = {
-    async getMusic() {
+    async getMusic() { //local storage is causing issues
         const savedTracks = localStorage.getItem("url_playlist");
         const urls = savedTracks ? JSON.parse(savedTracks) : [];
 
