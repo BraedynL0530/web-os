@@ -1,6 +1,6 @@
 # NebulaOS 
 
-NebulaOS[https://web-os-hh4f.vercel.app/boot] is a web-based operating system designed to mimic a customized ("riced") Linux environment. It features draggable applications, a notification menu, a local media player, and a system settings flyout/dropdown.
+(NebulaOS)[https://web-os-hh4f.vercel.app/boot] is a web-based operating system designed to mimic a customized ("riced") Linux environment. It features draggable applications, a notification menu, a local media player, and a system settings flyout/dropdown.
 
 ## Core Features
 
