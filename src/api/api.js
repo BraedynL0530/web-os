@@ -1,4 +1,4 @@
-const BACKEND_URL = 'http://localhost:8000'; // note to me change this on prod
+const BACKEND_URL = 'http://127.0.0.1:8000'; // note to me change this on prod
 
 const formatDuration = (seconds) => {
   if (!seconds || Number.isNaN(seconds)) return "—";
@@ -16,7 +16,7 @@ export const weather = {
       }
 
       const ipData = await ipRes.json();
-      const { latitude, longitude, city } = ipData;
+      const { latitude, longitude} = ipData;
 
       const weatherUrl =
         `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m&temperature_unit=fahrenheit`;
@@ -41,42 +41,62 @@ export const weather = {
   }
 };
 export const music = {
-    async getMusic() { //local storage is causing issues
-        const savedTracks = localStorage.getItem("url_playlist");
-        const urls = savedTracks ? JSON.parse(savedTracks) : [];
+  async getMusic() {
+    const savedTracks = localStorage.getItem("url_playlist");
 
-        const tracks = [];
+    let urls = [];
+    try {
+      const parsed = savedTracks ? JSON.parse(savedTracks) : [];
+      urls = Array.isArray(parsed) ? parsed : [];
+    } catch {
+      urls = [];
+    }
 
-        for (const url of urls) {
-          const res = await fetch(
-            `${BACKEND_URL}/stream-song?url=${encodeURIComponent(url)}&meta=1`
-          );
-          const data = await res.json();
+    const tracks = [];
 
-          tracks.push({
-            id: tracks.length,
-            artist: "YouTube Video",
-            song: data.title || "Unknown Title",
-            title: data.title || "Unknown Title",
-            duration: formatDuration(data.duration),
-            rawUrl: url,
-            file: `${BACKEND_URL}/stream-song?url=${encodeURIComponent(url)}`
-          });
-        }
+    for (const url of urls) {
+      if (!url) continue;
 
-        return tracks;
+      try {
+        const res = await fetch(
+          `${BACKEND_URL}/stream-song?url=${encodeURIComponent(url)}&meta=1`
+        );
+        const data = await res.json();
+
+        tracks.push({
+          id: tracks.length,
+          artist: "YouTube Video",
+          song: data.title || "Unknown Title",
+          title: data.title || "Unknown Title",
+          duration: formatDuration(data.duration),
+          rawUrl: url,
+          file: `${BACKEND_URL}/stream-song?url=${encodeURIComponent(url)}`
+        });
+      } catch (error) {
+        console.error("Failed to load track:", error);
+      }
+    }
+
+    return tracks;
   },
 
-    async addMusic(newUrl) {
-        if (!newUrl) return this.getMusic();
+  async addMusic(newUrl) {
+    if (!newUrl) return this.getMusic();
 
-        const savedTracks = localStorage.getItem("url_playlist");
-        const urls = savedTracks ? JSON.parse(savedTracks) : [];
+    const savedTracks = localStorage.getItem("url_playlist");
 
-        urls.push(newUrl);
-        localStorage.setItem("url_playlist", JSON.stringify(urls));
+    let urls = [];
+    try {
+      const parsed = savedTracks ? JSON.parse(savedTracks) : [];
+      urls = Array.isArray(parsed) ? parsed : [];
+    } catch {
+      urls = [];
+    }
 
-        return this.getMusic();
-      },
+    urls.push(newUrl);
+    localStorage.setItem("url_playlist", JSON.stringify(urls));
+
+    return this.getMusic();
+  }
 };
 

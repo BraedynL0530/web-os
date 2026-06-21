@@ -8,6 +8,7 @@ body,
 
 .top-wrapper {
   position: relative;
+  z-index: 100;
 }
 
 .top-bar {
@@ -41,7 +42,45 @@ body,
 .settings-btn:hover {
   background: rgba(255, 107, 157, 0.22);
 }
+.settings-dropdown {
+  position: absolute;
+  top: 50px;
+  left: 10px;
 
+  width: 500px;
+  max-width: 90vw;
+
+  background: rgba(20, 24, 44, 0.97);
+  border: 1px solid rgba(168, 230, 207, 0.25);
+  border-radius: 12px;
+
+  backdrop-filter: blur(12px);
+
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+
+  padding: 15px;
+
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+
+  transition:
+    opacity 0.25s ease,
+    visibility 0.25s ease,
+    transform 0.25s ease;
+
+  z-index: 50;
+}
+
+.settings-dropdown.open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
 .center {
   display: flex;
   flex-direction: column;
@@ -99,7 +138,12 @@ body,
   backdrop-filter: blur(12px);
 }
 
-/* Typo fixed from music-contrainer to match your component */
+.top-wrapper:hover .drop-bar {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0);
+}
+
 .music-contrainer {
   display: flex;
   flex-direction: column;
@@ -107,12 +151,6 @@ body,
   padding: 10px;
   border-radius: 10px;
   background: rgba(255, 255, 255, 0.04);
-}
-
-.top-wrapper:hover .drop-bar {
-  opacity: 1;
-  visibility: visible;
-  transform: translate(-50%, 0);
 }
 
 .music-info {
@@ -150,9 +188,16 @@ body,
 
 .music-controls {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: stretch;
   gap: 8px;
   margin-top: auto;
+}
+
+.transport-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .music-controls button,
@@ -166,20 +211,12 @@ body,
   white-space: nowrap;
 }
 
-.music-controls button:hover,
-.add-btn:hover {
-  filter: brightness(1.05);
-}
-
-/* FIXED: Changed flex-wrap to make input row look neat */
 .add-song {
   display: flex;
   gap: 6px;
-  flex: 1;
-  margin-left: 6px;
+  width: 100%;
 }
 
-/* FIXED: Softened padding and border behavior */
 .song-input {
   flex: 1;
   width: 100%;
@@ -197,8 +234,7 @@ body,
   border-color: #ff6b9d;
 }
 
-/* Typo fixed from diclamer */
-.diclamer, .disclaimer {
+.diclamer {
   font-size: 10px;
   color: #8ca0d8;
   margin: 0;
@@ -215,11 +251,11 @@ body,
 }
 
 .notif-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    color: #c7ceea;
-    font-size: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #c7ceea;
+  font-size: 20px;
 }
 
 .notif-title {
@@ -234,6 +270,143 @@ body,
   color: #c7ceea;
 }
 
+.left-side {
+  width: 140px;
+  min-width: 140px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bongo-cat {
+  width: 120px;
+  height: auto;
+  image-rendering: pixelated;
+}
+
+.os-info {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+
+  color: #8ca0d8;
+  font-size: 12px;
+}
+
+.about-me-menu {
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.about-me-title {
+  color: #ff6b9d;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.about-me-body {
+  color: #c7ceea;
+  font-size: 13px;
+  line-height: 1.5;
+
+  background: rgba(255, 255, 255, 0.04);
+
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.backgrounds-dropdown {
+  position: relative;
+
+  padding: 10px;
+  margin-top: 10px;
+
+  border-radius: 8px;
+
+  background: rgba(255,255,255,0.05);
+
+  color: #ff6b9d;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+.backgrounds {
+  position: absolute;
+
+  top: 0;
+  left: calc(100% + 10px);
+
+  width: 300px;
+
+  padding: 10px;
+
+  border-radius: 10px;
+
+  background: rgba(20,24,44,0.98);
+
+  border: 1px solid rgba(168,230,207,0.25);
+
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+
+  opacity: 0;
+  visibility: hidden;
+
+  transform: translateX(-15px);
+
+  transition: all .25s ease;
+
+  z-index: 200;
+}
+
+.background-item {
+  height: 80px;
+
+  border: none;
+  border-radius: 8px;
+
+  color: white;
+  font-weight: bold;
+
+  cursor: pointer;
+
+  transition: transform .2s;
+}
+
+.background-item:hover {
+  transform: scale(1.05);
+}
+
+.background-item::before {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  background: rgba(0, 0, 0, 0.35);
+}
+
+
+
+.background-item {
+  position: relative;
+  z-index: 1;
+}
+.backgrounds-dropdown:hover .backgrounds {
+  opacity: 1;
+  visibility: visible;
+
+  transform: translateX(0);
+}
+.background-item > * {
+  position: relative;
+  z-index: 2;
+}
 audio {
   display: none;
 }
