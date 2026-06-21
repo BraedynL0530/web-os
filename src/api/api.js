@@ -1,4 +1,4 @@
-const BACKEND_URL = 'http://127.0.0.1:8000'; // note to me change this on prod
+const BACKEND_URL = 'https://azurex3-backend.hf.space'; // note to me change this on prod
 
 const formatDuration = (seconds) => {
   if (!seconds || Number.isNaN(seconds)) return "—";
