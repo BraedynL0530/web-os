@@ -13,28 +13,30 @@ function Window({
   const App = window.component;
 
   const startResize = (e) => {
-    e.stopPropagation();
+  e.stopPropagation();
+  document.body.style.cursor = "nwse-resize";
+  const startX = e.clientX;
+  const startY = e.clientY;
+  const startWidth = window.width;
+  const startHeight = window.height;
 
-    const startX = e.clientX;
-    const startY = e.clientY;
-    const startWidth = window.width;
-    const startHeight = window.height;
-
-    const onMouseMove = (ev) => {
-      onResize?.({
-        width: Math.max(320, startWidth + (ev.clientX - startX)),
-        height: Math.max(240, startHeight + (ev.clientY - startY))
-      });
-    };
-
-    const onMouseUp = () => {
-      document.removeEventListener("mousemove", onMouseMove);
-      document.removeEventListener("mouseup", onMouseUp);
-    };
-
-    document.addEventListener("mousemove", onMouseMove);
-    document.addEventListener("mouseup", onMouseUp);
+  const onMouseMove = (ev) => {
+    onResize?.({
+      width: startWidth + (ev.clientX - startX),
+      height: startHeight + (ev.clientY - startY)
+    });
   };
+
+  const onMouseUp = () => {
+    document.body.style.cursor = "default";
+    document.removeEventListener("mousemove", onMouseMove);
+    document.removeEventListener("mouseup", onMouseUp);
+  };
+
+  document.addEventListener("mousemove", onMouseMove);
+  document.addEventListener("mouseup", onMouseUp);
+};
+
 
   return (
     <div

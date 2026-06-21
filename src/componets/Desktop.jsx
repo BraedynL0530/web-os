@@ -8,6 +8,9 @@ import Snake from "./apps/snake.jsx";
 import Calc from "./apps/calc.jsx";
 import Terminal from "./apps/Terminal.jsx";
 import Notes from "./apps/Notes.jsx";
+import pillars from "../assets/pillarsOfCreation.jpg";
+import Ring from "../assets/southernRing.jpg";
+import Black from "../assets/black.jpg";
 function Desktop() {
     const [apps] = useState([
         { id: crypto.randomUUID(), name: "Drawing",title:"Drawing", component: Whiteboard, icon: "Drawing"},
@@ -18,9 +21,9 @@ function Desktop() {
     ]);
 
     const [backgrounds] = useState([
-        {id:1,name:"bg1", image:"temp.jpg"},
-        {id:2,name:"bg1", image:"temp.jpg"},
-        {id:3,name:"bg1", image:"temp.jpg"}
+        {id:1,name:"Southern Ring", image:Ring},
+        {id:2,name:"Pillars of Creation", image:pillars},
+        {id:3,name:"Black", image:Black},
     ]);
     const [currentBg, setCurrentBg] = useState(backgrounds[0]);
 

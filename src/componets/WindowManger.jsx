@@ -6,11 +6,27 @@ const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
 const TITLE_BAR_HEIGHT = 40;
 const BORDER = 2;
 const CONTENT_PADDING = 12;
+const TOP_BAR_HEIGHT = 40;
+
 
 const getContentViewport = (w) => ({
   width: Math.max(240, w.width - BORDER * 2 - CONTENT_PADDING * 2),
   height: Math.max(180, w.height - TITLE_BAR_HEIGHT - BORDER * 2 - CONTENT_PADDING * 2)
 });
+
+const checkSnap = (x, y, width, height) => {
+  const threshold = 50;
+  const screenW = window.innerWidth;
+  const screenH = window.innerHeight;
+
+  if (x < threshold)
+    return { x: 0, y: TOP_BAR_HEIGHT, width: screenW / 2, height: screenH - TOP_BAR_HEIGHT };
+
+  if (x + width > screenW - threshold)
+    return { x: screenW / 2, y: TOP_BAR_HEIGHT, width: screenW / 2, height: screenH - TOP_BAR_HEIGHT };
+
+  return null;
+};
 
 const WindowManager = forwardRef((props, ref) => {
   const [windows, setWindows] = useState([]);
@@ -65,14 +81,14 @@ const WindowManager = forwardRef((props, ref) => {
       }
 
       return {
-        ...w,
-        prevBounds: { x: w.x, y: w.y, width: w.width, height: w.height },
-        x: 0,
-        y: 0,
-        width: window.innerWidth,
-        height: window.innerHeight,
-        maximized: true
-      };
+          ...w,
+          prevBounds: { x: w.x, y: w.y, width: w.width, height: w.height },
+          x: 0,
+          y: TOP_BAR_HEIGHT,
+          width: window.innerWidth,
+          height: window.innerHeight - TOP_BAR_HEIGHT,
+          maximized: true
+        };
     });
   };
 
@@ -82,8 +98,12 @@ const WindowManager = forwardRef((props, ref) => {
   };
 
   const moveWindow = (id, pos) => {
-    updateWindow(id, w => ({ ...w, ...pos }));
-  };
+  updateWindow(id, w => {
+    const nextState = { ...w, ...pos };
+    const snapped = checkSnap(nextState.x, nextState.y, nextState.width, nextState.height);
+    return snapped ? { ...nextState, ...snapped } : nextState;
+  });
+};
 
   const resizeWindow = (id, next) => {
     updateWindow(id, w => ({
