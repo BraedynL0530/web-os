@@ -8,10 +8,50 @@ function TopBar({ backgrounds, setBackground }) {
   const [time, setTime] = useState(new Date().toLocaleTimeString());
   const [weatherData, setWeatherData] = useState(null);
   const [playlist, setPlaylist] = useState([]);
-  const audioRef = useRef(null);
+
   const [currentIndex, setCurrentIndex] = useState(0);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const safePlaylist = Array.isArray(playlist) ? playlist : [];
+  const ytReadyRef = useRef(false);
+
+  useEffect(() => {
+    const existing = document.getElementById("youtube-iframe-api");
+    if (!existing) {
+      const tag = document.createElement("script");
+      tag.id = "youtube-iframe-api";
+      tag.src = "https://www.youtube.com/iframe_api";
+      document.body.appendChild(tag);
+    }
+
+    const prev = window.onYouTubeIframeAPIReady;
+    window.onYouTubeIframeAPIReady = () => {
+      if (ytReadyRef.current) return;
+
+      const player = new window.YT.Player("youtube-player", {
+        width: "1",
+        height: "1",
+        videoId: "",
+        playerVars: { autoplay: 0, controls: 0, rel: 0, modestbranding: 1 },
+        events: {
+          onReady: () => {
+            ytReadyRef.current = true;
+            // ADDED: give api.js access to the live player instance
+            music.init(player);
+          },
+          onStateChange: (event) => {
+            // ADDED: forward YT ended/playing events to api.js handler
+            music.handlePlayerStateChange(event);
+          },
+        },
+      });
+
+      if (typeof prev === "function") prev();
+    };
+
+    return () => {
+      window.onYouTubeIframeAPIReady = prev || null;
+    };
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -52,6 +92,7 @@ function TopBar({ backgrounds, setBackground }) {
     };
   }, []);
 
+
   useEffect(() => {
     const interval = setInterval(() => {
       setTime(new Date().toLocaleTimeString());
@@ -59,8 +100,18 @@ function TopBar({ backgrounds, setBackground }) {
     return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    const unsubscribe = music.onEnded(() => {
+      if (!safePlaylist.length) return;
+      const next = (currentIndex + 1) % safePlaylist.length;
+      void playSong(next, safePlaylist);
+    });
+
+    return () => unsubscribe?.();
+  }, [currentIndex, safePlaylist]);
+
   const handleAddSong = async () => {
-    const input = document.querySelector(".song-input");
+     const input = document.querySelector(".song-input");
     if (!input || !input.value.trim()) return;
 
     const updated = await music.addMusic(input.value);
@@ -69,54 +120,39 @@ function TopBar({ backgrounds, setBackground }) {
     setPlaylist(newPlaylist);
 
     const newestIndex = newPlaylist.length - 1;
-    await playSong(newestIndex, newPlaylist);
+
+    const track = newPlaylist[newestIndex];
+    if (track?.videoId) {
+      music.play(track.videoId);
+      setCurrentIndex(newestIndex);
+    }
 
     input.value = "";
   };
 
-  const playSong = async (index, tracks = playlist) => {
+  const playSong = async (index, tracks = safePlaylist) => {
     const track = tracks[index];
-    if (!track) return;
+    if (!track?.videoId) return;
 
-    const audio = audioRef.current;
-    if (!audio) return;
-
-    try {
-      audio.pause();
-      audio.src = track.file;
-      audio.load();
-      await audio.play();
-      setCurrentIndex(index);
-    } catch (err) {
-      console.error("Playback failed:", err);
-    }
+    music.play(track.videoId);
+    setCurrentIndex(index);
   };
 
-const togglePlayback = async () => {
-  const audio = audioRef.current;
-  if (!audio) return;
 
-  try {
-    if (audio.paused) {
-      await audio.play();
-    } else {
-      audio.pause();
-    }
-  } catch (err) {
-    console.error("Toggle playback failed:", err);
-  }
-};
+  const togglePlayback = async () => {
+      music.isPaused() ? music.resume() : music.pause();
+    };
 
   const nextSong = () => {
-      if (!playlist.length) return;
-      const next = (currentIndex + 1) % playlist.length;
-      void playSong(next);
+       if (!safePlaylist.length) return;
+       const next = (currentIndex + 1) % safePlaylist.length;
+       void playSong(next, safePlaylist);
     };
 
   const prevSong = () => {
-      if (!playlist.length) return;
-      const prev = (currentIndex - 1 + playlist.length) % playlist.length;
-      void playSong(prev);
+      if (!safePlaylist.length) return;
+      const prev = (currentIndex - 1 + safePlaylist.length) % safePlaylist.length;
+      void playSong(prev, safePlaylist);
     };
 
 
@@ -125,7 +161,15 @@ const togglePlayback = async () => {
   };
   return (
     <div className="top-wrapper">
-      <audio ref={audioRef} />
+      <div
+        id="youtube-player"
+        style={{
+          width: "1px",
+          height: "1px",
+          position: "absolute",
+          left: "-9999px"
+        }}
+      />
 
       <div className="top-bar">
         <button className="settings-btn" onClick={toggleDropdown}>☰ Nebula</button>

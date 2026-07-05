@@ -1,10 +1,34 @@
-const BACKEND_URL = 'http://127.0.0.1:8000'; // note to me change this on prod
 
 const formatDuration = (seconds) => {
   if (!seconds || Number.isNaN(seconds)) return "—";
   const mins = Math.floor(seconds / 60);
   const secs = Math.floor(seconds % 60);
   return `${mins}:${secs.toString().padStart(2, "0")}`;
+};
+
+const extractVideoId = (input = "") => {
+  const text = input.trim();
+  if (/^[a-zA-Z0-9_-]{11}$/.test(text)) return text;
+
+  const patterns = [
+    /youtube\.com\/watch\?v=([a-zA-Z0-9_-]{11})/,
+    /youtu\.be\/([a-zA-Z0-9_-]{11})/,
+    /youtube\.com\/embed\/([a-zA-Z0-9_-]{11})/,
+    /youtube\.com\/shorts\/([a-zA-Z0-9_-]{11})/,
+  ];
+
+  for (const p of patterns) {
+    const m = text.match(p);
+    if (m?.[1]) return m[1];
+  }
+
+  try {
+    const u = new URL(text);
+    const v = u.searchParams.get("v");
+    if (v && /^[a-zA-Z0-9_-]{11}$/.test(v)) return v;
+  } catch (_) {}
+
+  return null;
 };
 
 export const weather = {
@@ -40,63 +64,85 @@ export const weather = {
     }
   }
 };
-export const music = {
-  async getMusic() {
-    const savedTracks = localStorage.getItem("url_playlist");
+export const music = { // backend is isnt gonna work im gonna do invisible i frames with youtube!
+    player: null,
+  onEndedCallback: null,
 
-    let urls = [];
-    try {
-      const parsed = savedTracks ? JSON.parse(savedTracks) : [];
-      urls = Array.isArray(parsed) ? parsed : [];
-    } catch {
-      urls = [];
-    }
-
-    const tracks = [];
-
-    for (const url of urls) {
-      if (!url) continue;
-
-      try {
-        const res = await fetch(
-          `${BACKEND_URL}/stream-song?url=${encodeURIComponent(url)}&meta=1`
-        );
-        const data = await res.json();
-
-        tracks.push({
-          id: tracks.length,
-          artist: "YouTube Video",
-          song: data.title || "Unknown Title",
-          title: data.title || "Unknown Title",
-          duration: formatDuration(data.duration),
-          rawUrl: url,
-          file: `${BACKEND_URL}/stream-song?url=${encodeURIComponent(url)}`
-        });
-      } catch (error) {
-        console.error("Failed to load track:", error);
-      }
-    }
-
-    return tracks;
+  init(player) {
+    this.player = player;
   },
 
-  async addMusic(newUrl) {
-    if (!newUrl) return this.getMusic();
+  onEnded(cb) {
+    this.onEndedCallback = cb;
+    return () => {
+      if (this.onEndedCallback === cb) this.onEndedCallback = null;
+    };
+  },
 
-    const savedTracks = localStorage.getItem("url_playlist");
+  handlePlayerStateChange(event) {
+    if (!window.YT) return;
+    if (event.data === window.YT.PlayerState.ENDED) {
+      this.onEndedCallback?.();
+    }
+  },
 
+  async getMusic() {
+    const saved = localStorage.getItem("url_playlist");
     let urls = [];
     try {
-      const parsed = savedTracks ? JSON.parse(savedTracks) : [];
+      const parsed = JSON.parse(saved);
       urls = Array.isArray(parsed) ? parsed : [];
     } catch {
       urls = [];
     }
 
-    urls.push(newUrl);
-    localStorage.setItem("url_playlist", JSON.stringify(urls));
+    return urls
+      .map((url, index) => {
+        const videoId = extractVideoId(url);
+        return {
+          id: index,
+          rawUrl: url,
+          videoId,
+          title: videoId ? `YouTube ${videoId}` : "Invalid URL",
+          song: videoId ? `YouTube ${videoId}` : "Invalid URL",
+          artist: "YouTube",
+          duration: "—",
+        };
+      })
+      .filter((x) => !!x.videoId);
+  },
 
+  async addMusic(url) {
+    const trimmed = (url || "").trim();
+    const videoId = extractVideoId(trimmed);
+    if (!videoId) return this.getMusic();
+
+    const current = await this.getMusic();
+    const nextUrls = current.map((x) => x.rawUrl);
+    nextUrls.push(trimmed);
+
+    localStorage.setItem("url_playlist", JSON.stringify(nextUrls));
     return this.getMusic();
-  }
+  },
+
+  play(videoId) {
+    if (!this.player || !videoId) return;
+    this.player.loadVideoById(videoId);
+  },
+
+  pause() {
+    if (!this.player) return;
+    this.player.pauseVideo();
+  },
+
+  resume() {
+    if (!this.player) return;
+    this.player.playVideo();
+  },
+
+  isPaused() {
+    if (!this.player || !window.YT) return true;
+    return this.player.getPlayerState() !== window.YT.PlayerState.PLAYING;
+  },
 };
 
