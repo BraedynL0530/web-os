@@ -35,11 +35,9 @@ function TopBar({ backgrounds, setBackground }) {
         events: {
           onReady: () => {
             ytReadyRef.current = true;
-            // ADDED: give api.js access to the live player instance
             music.init(player);
           },
           onStateChange: (event) => {
-            // ADDED: forward YT ended/playing events to api.js handler
             music.handlePlayerStateChange(event);
           },
         },
