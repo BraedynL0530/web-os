@@ -260,9 +260,9 @@ function TopBar({ backgrounds, setBackground }) {
 
           <div className="music-controls">
               <div className="transport-controls">
-                <button className="prev-btn" onClick={prevSong}>⏮️</button>
-                <button className="play-btn" onClick={() => void togglePlayback()}>▶️</button>
-                <button className="next-btn" onClick={nextSong}>⏭️</button>
+                <button className="prev-btn" onClick={prevSong}>⏮</button>
+                <button className="play-btn" onClick={() => void togglePlayback()}>❚❚️</button>
+                <button className="next-btn" onClick={nextSong}>⏭</button>
               </div>
 
             <div className="add-song">
