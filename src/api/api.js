@@ -97,19 +97,19 @@ export const music = { // backend is isnt gonna work im gonna do invisible i fra
     }
 
     return urls
-      .map((url, index) => {
-        const videoId = extractVideoId(url);
-        return {
-          id: index,
-          rawUrl: url,
-          videoId,
-          title: videoId ? `YouTube ${videoId}` : "Invalid URL",
-          song: videoId ? `YouTube ${videoId}` : "Invalid URL",
-          artist: "YouTube",
-          duration: "—",
-        };
-      })
-      .filter((x) => !!x.videoId);
+    .map((url) => {
+      const videoId = extractVideoId(url);
+      return {
+        id: videoId || url,
+        rawUrl: url,
+        videoId,
+        title: videoId ? `YouTube ${videoId}` : "Invalid URL",
+        song: videoId ? `YouTube ${videoId}` : "Invalid URL",
+        artist: "YouTube",
+        duration: "—",
+      };
+    })
+    .filter((x) => !!x.videoId);
   },
 
   async addMusic(url) {

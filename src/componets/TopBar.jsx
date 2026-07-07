@@ -12,7 +12,31 @@ function TopBar({ backgrounds, setBackground }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const safePlaylist = Array.isArray(playlist) ? playlist : [];
+
   const ytReadyRef = useRef(false);
+  const playlistRef = useRef([]);
+  const currentIndexRef = useRef(-1);
+
+  useEffect(() => {
+    playlistRef.current = safePlaylist;
+  }, [safePlaylist]);
+
+  useEffect(() => {
+    currentIndexRef.current = currentIndex;
+  }, [currentIndex]);
+
+  useEffect(() => {
+    const unsubscribe = music.onEnded(() => {
+      const tracks = playlistRef.current || [];
+      if (!tracks.length) return;
+
+      const i = currentIndexRef.current;
+      const next = ((i >= 0 ? i : 0) + 1) % tracks.length;
+      void playSong(next, tracks);
+    });
+
+    return () => unsubscribe?.();
+  }, []);
 
   useEffect(() => {
     const existing = document.getElementById("youtube-iframe-api");
